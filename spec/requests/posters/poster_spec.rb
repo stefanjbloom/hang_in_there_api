@@ -52,4 +52,28 @@ describe "Posters API" do
             expect(poster[:img_url]).to be_a(String)
         end
     end
+
+    it 'can create a poster' do
+        poster_params = {name: "JOY",
+                description: "To the World, my program works!",
+                price: 42.00,
+                year: 2019,
+                vintage: false,
+                img_url: "https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk"}
+        
+        headers = { "CONTENT_TYPE" => "application/json" }
+
+        post '/api/v1/posters', headers: headers, params: JSON.generate(poster: poster_params)
+        created_poster = Poster.last
+
+        expect(response).to be_successful
+
+        poster = Poster.last
+        expect(poster.name).to eq("JOY")
+        expect(poster.description).to eq("To the World, my program works!")
+        expect(poster.price).to eq(42.00)
+        expect(poster.year).to eq(2019)
+        expect(poster.vintage).to be false
+        expect(poster.img_url).to eq("https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk")
+    end
 end
