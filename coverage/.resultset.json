@@ -1,6 +1,35 @@
 {
   "RSpec": {
     "coverage": {
+      "/Users/stefanbloom/hang_in_there_api/app/models/poster.rb": {
+        "lines": [
+          1,
+          null,
+          null
+        ]
+      },
+      "/Users/stefanbloom/hang_in_there_api/app/models/application_record.rb": {
+        "lines": [
+          1,
+          1,
+          null
+        ]
+      },
+      "/Users/stefanbloom/hang_in_there_api/app/controllers/api/v1/posters_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          null
+        ]
+      },
+      "/Users/stefanbloom/hang_in_there_api/app/controllers/application_controller.rb": {
+        "lines": [
+          1,
+          null
+        ]
+      },
       "/Users/stefanbloom/hang_in_there_api/app/channels/application_cable/channel.rb": {
         "lines": [
           0,
@@ -15,25 +44,6 @@
         "lines": [
           0,
           0,
-          0,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/stefanbloom/hang_in_there_api/app/controllers/api/v1/posters_controller.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/stefanbloom/hang_in_there_api/app/controllers/application_controller.rb": {
-        "lines": [
           0,
           0
         ],
@@ -62,26 +72,8 @@
         ],
         "branches": {
         }
-      },
-      "/Users/stefanbloom/hang_in_there_api/app/models/application_record.rb": {
-        "lines": [
-          0,
-          0,
-          0
-        ],
-        "branches": {
-        }
-      },
-      "/Users/stefanbloom/hang_in_there_api/app/models/poster.rb": {
-        "lines": [
-          0,
-          null,
-          0
-        ],
-        "branches": {
-        }
       }
     },
-    "timestamp": 1725479118
+    "timestamp": 1725482069
   }
 }
