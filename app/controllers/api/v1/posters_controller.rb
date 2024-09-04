@@ -6,9 +6,9 @@ class Api::V1::PostersController < ApplicationController
     def show
         render json: Poster.find(params[:id])
     end
-    
+
     def create
-        render json: Poster.create(poster_params)
+        render json: Poster.create(poster_params), status: 201
     end
 
     def update
@@ -16,7 +16,7 @@ class Api::V1::PostersController < ApplicationController
     end
 
     def destroy
-        render json: Poster.delete(params[:id])
+        render json: Poster.delete(params[:id]), status: 204
     end
 
     private
