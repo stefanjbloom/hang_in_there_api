@@ -108,4 +108,24 @@ describe "Posters API" do
         expect(poster.vintage).to be false
         expect(poster.img_url).to eq("https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk")
     end
+
+    it "can update an existing Poster" do
+        id = Poster.create({name: "JOY",
+            description: "To the World, my program works!",
+            price: 42.00,
+            year: 2019,
+            vintage: false,
+            img_url: "https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk"}).id
+        previous_price = Poster.last.price
+        poster_params = { price: 80.25 }
+        headers = {"CONTENT_TYPE" => "application/json"}
+        # We include this header to make sure that these params are passed as JSON rather than as plain text
+        
+        patch "/api/v1/posters/#{id}", headers: headers, params: JSON.generate({poster: poster_params})
+        poster = Poster.find_by(id: id)
+      
+        expect(response).to be_successful
+        expect(poster.price).to_not eq(previous_price)
+        expect(poster.price).to eq(80.25)
+      end
 end
