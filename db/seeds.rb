@@ -7,6 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+Poster.destroy_all
+
 Poster.create(name: "REGRET",
             description: "Hard work rarely pays off.",
             price: 89.00,
