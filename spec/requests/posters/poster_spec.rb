@@ -136,5 +136,42 @@ describe "Posters API" do
         expect(response).to be_successful
         expect(poster.price).to_not eq(previous_price)
         expect(poster.price).to eq(80.25)
-      end
+    end
+
+    it "can filter Posters by name" do
+        get '/api/v1/posters?name=re'
+
+        expect(response).to be_successful
+
+        posters = JSON.parse(response.body, symbolize_names: true)
+
+        expect(posters[:data].count).to eq(2)
+
+        posters[:data].each do |poster|
+            expect(poster).to have_key(:id)
+            expect(poster[:id].to_i).to be_an(Integer)
+
+            expect(poster).to have_key(:attributes)
+            expect(poster[:attributes]).to be_a(Hash)
+
+            expect(poster[:attributes]).to have_key(:name)
+            expect(poster[:attributes][:name]).to be_a(String)
+            expect(poster[:attributes][:name].downcase).to include("re".downcase)
+
+            expect(poster[:attributes]).to have_key(:description)
+            expect(poster[:attributes][:description]).to be_a(String)
+
+            expect(poster[:attributes]).to have_key(:price)
+            expect(poster[:attributes][:price]).to be_a(Float)
+
+            expect(poster[:attributes]).to have_key(:year)
+            expect(poster[:attributes][:year]).to be_a(Integer)
+
+            expect(poster[:attributes]).to have_key(:vintage)
+            expect([true, false]).to include(poster[:attributes][:vintage])
+
+            expect(poster[:attributes]).to have_key(:img_url)
+            expect(poster[:attributes][:img_url]).to be_a(String)
+        end
+    end
 end
