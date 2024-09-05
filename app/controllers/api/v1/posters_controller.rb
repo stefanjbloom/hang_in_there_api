@@ -1,6 +1,10 @@
 class Api::V1::PostersController < ApplicationController
     def index
         posters = Poster.order_by(params[:sort])
+                        .filter_by_name(params[:name])
+                        .filter_by_max(params[:max_price])
+                        .filter_by_min(params[:min_price])
+
 
         options = {}
         options[:meta] = { count: posters.count}
@@ -9,23 +13,17 @@ class Api::V1::PostersController < ApplicationController
     
     def show
         poster = Poster.find(params[:id])
-        options = {}
-        options[:meta] = { count: 1}
-        render json: PosterSerializer.new(poster, options)
+        render json: PosterSerializer.new(poster)
     end
 
     def create
         poster = Poster.create(poster_params)
-        options = {}
-        options[:meta] = { count: 1}
-        render json: PosterSerializer.new(poster, options), status: 201
+        render json: PosterSerializer.new(poster), status: 201
     end
 
     def update
         poster = Poster.update(params[:id], poster_params)
-        options = {}
-        options[:meta] = { count: 1}
-        render json: PosterSerializer.new(poster, options)
+        render json: PosterSerializer.new(poster)
     end
 
     def destroy
