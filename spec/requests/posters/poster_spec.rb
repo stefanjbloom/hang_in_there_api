@@ -12,26 +12,29 @@ describe "Posters API" do
 
         posters = JSON.parse(response.body, symbolize_names: true)
 
-        expect(posters.count).to eq(3)
-
-        posters.each do |poster|
+        expect(posters[:data].count).to eq(3)
+        # require 'pry';binding.pry
+        posters[:data].each do |poster|
             expect(poster).to have_key(:id)
-            expect(poster[:id]).to be_an(Integer)
+            expect(poster[:id].to_i).to be_an(Integer)
 
-            expect(poster).to have_key(:name)
-            expect(poster[:name]).to be_a(String)
+            expect(poster).to have_key(:attributes)
+            expect(poster[:attributes]).to be_a(Hash)
 
-            expect(poster).to have_key(:description)
-            expect(poster[:description]).to be_a(String)
+            expect(poster[:attributes]).to have_key(:name)
+            expect(poster[:attributes][:name]).to be_a(String)
 
-            expect(poster).to have_key(:price)
-            expect(poster[:price]).to be_a(Float)
+            expect(poster[:attributes]).to have_key(:description)
+            expect(poster[:attributes][:description]).to be_a(String)
 
-            expect(poster).to have_key(:year)
-            expect(poster[:year]).to be_a(Integer)
+            expect(poster[:attributes]).to have_key(:price)
+            expect(poster[:attributes][:price]).to be_a(Float)
 
-            expect(poster).to have_key(:img_url)
-            expect(poster[:img_url]).to be_a(String)
+            expect(poster[:attributes]).to have_key(:year)
+            expect(poster[:attributes][:year]).to be_a(Integer)
+
+            expect(poster[:attributes]).to have_key(:img_url)
+            expect(poster[:attributes][:img_url]).to be_a(String)
         end
     end
 
