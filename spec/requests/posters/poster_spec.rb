@@ -33,6 +33,9 @@ describe "Posters API" do
             expect(poster[:attributes]).to have_key(:year)
             expect(poster[:attributes][:year]).to be_a(Integer)
 
+            expect(poster[:attributes]).to have_key(:vintage)
+            expect([true, false]).to include(poster[:attributes][:vintage])
+
             expect(poster[:attributes]).to have_key(:img_url)
             expect(poster[:attributes][:img_url]).to be_a(String)
         end
@@ -66,6 +69,9 @@ describe "Posters API" do
 
         expect(poster[:data][:attributes]).to have_key(:year)
         expect(poster[:data][:attributes][:year]).to be_a(Integer)
+
+        expect(poster[:data][:attributes]).to have_key(:vintage)
+        expect([true, false]).to include(poster[:data][:attributes][:vintage])
 
         expect(poster[:data][:attributes]).to have_key(:img_url)
         expect(poster[:data][:attributes][:img_url]).to be_a(String)
