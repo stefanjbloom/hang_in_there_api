@@ -52,23 +52,23 @@ describe "Posters API" do
     
         expect(response).to be_successful
 
-        expect(poster).to have_key(:id)
-        expect(poster[:id]).to be_an(Integer)
+        expect(poster[:data]).to have_key(:id)
+        expect(poster[:data][:id].to_i).to be_an(Integer)
 
-        expect(poster).to have_key(:name)
-        expect(poster[:name]).to be_a(String)
+        expect(poster[:data][:attributes]).to have_key(:name)
+        expect(poster[:data][:attributes][:name]).to be_a(String)
 
-        expect(poster).to have_key(:description)
-        expect(poster[:description]).to be_a(String)
+        expect(poster[:data][:attributes]).to have_key(:description)
+        expect(poster[:data][:attributes][:description]).to be_a(String)
 
-        expect(poster).to have_key(:price)
-        expect(poster[:price]).to be_a(Float)
+        expect(poster[:data][:attributes]).to have_key(:price)
+        expect(poster[:data][:attributes][:price]).to be_a(Float)
 
-        expect(poster).to have_key(:year)
-        expect(poster[:year]).to be_a(Integer)
+        expect(poster[:data][:attributes]).to have_key(:year)
+        expect(poster[:data][:attributes][:year]).to be_a(Integer)
 
-        expect(poster).to have_key(:img_url)
-        expect(poster[:img_url]).to be_a(String)
+        expect(poster[:data][:attributes]).to have_key(:img_url)
+        expect(poster[:data][:attributes][:img_url]).to be_a(String)
     end    
 
     it "can destroy an poster" do
