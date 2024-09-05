@@ -4,6 +4,6 @@ class Poster < ApplicationRecord
     scope :filter_by_min, ->(price = 0) { where("price <= ?", price) }
 
     def self.order_by(sort)
-        sort.present? ? order(created_at: sort) : all
+        sort.present? ? order(created_at: sort) : all   
     end
 end
