@@ -13,7 +13,7 @@ describe "Posters API" do
         posters = JSON.parse(response.body, symbolize_names: true)
 
         expect(posters[:data].count).to eq(3)
-        # require 'pry';binding.pry
+
         posters[:data].each do |poster|
             expect(poster).to have_key(:id)
             expect(poster[:id].to_i).to be_an(Integer)
@@ -136,6 +136,29 @@ describe "Posters API" do
         expect(response).to be_successful
         expect(poster.price).to_not eq(previous_price)
         expect(poster.price).to eq(80.25)
+      end
+
+      it "can return posters in ascending order" do
+        get "/api/v1/posters?sort=asc"
+        
+        poster = JSON.parse(response.body, symbolize_names: true)
+        
+        expect(response).to be_successful
+        expect(poster.count).to eq(2)
+        expect(poster[:data][0][:attributes][:name]).to eq("REGRET")        
+        expect(poster[:data][2][:attributes][:name]).to eq("MEDIOCRITY")
+      end
+
+    it "can return posters in descending order" do
+        get "/api/v1/posters?sort=desc"
+        
+        poster = JSON.parse(response.body, symbolize_names: true)
+        
+        expect(response).to be_successful
+        expect(poster.count).to eq(2)
+        expect(poster[:data][0][:attributes][:name]).to eq("MEDIOCRITY")
+        expect(poster[:data][2][:attributes][:name]).to eq("REGRET")
+    end
     end
 
     it "can filter Posters by name" do
