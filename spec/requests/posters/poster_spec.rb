@@ -227,4 +227,10 @@ RSpec.describe Poster, type: :model do
         it { should validate_inclusion_of(:vintage).in_array([true, false]).with_message("should be true or false")}
         it {should validate_uniqueness_of(:name).with_message("needs to be unique")}
     end
+
+    describe "errors" do
+        it "will return a status code and message when incorrect id queried" do
+            get 
+        end
+    end
 end
