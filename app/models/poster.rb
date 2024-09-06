@@ -12,4 +12,25 @@ class Poster < ApplicationRecord
     def self.order_by(sort)
         sort.present? ? order(created_at: sort) : all   
     end
+
+    def self.missing_id(id)
+        poster_hash = {}
+        begin
+            poster_hash[:status_code] = 200
+            poster_var = Poster.find(id)
+            poster_var = PosterSerializer.new(poster_var)
+            poster_hash[:body] = poster_var
+        rescue ActiveRecord::RecordNotFound => each
+            poster_var = {
+                "errors": [
+                {
+                "status": "404",
+                "message": "Record not found"
+                }
+            ]} 
+            poster_hash[:status_code] = 404
+            poster_hash[:body] = poster_var
+        end
+        return poster_hash
+    end
 end

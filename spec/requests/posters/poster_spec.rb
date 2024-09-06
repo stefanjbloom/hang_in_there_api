@@ -230,7 +230,8 @@ RSpec.describe Poster, type: :model do
 
     describe "errors" do
         it "will return a status code and message when incorrect id queried" do
-            get 
+            get "/api/v1/posters/74"
+            
         end
     end
 end
