@@ -12,8 +12,8 @@ class Api::V1::PostersController < ApplicationController
     end
     
     def show
-        poster = Poster.find(params[:id])
-        render json: PosterSerializer.new(poster)
+        poster = Poster.missing_id(params[:id])
+        render json: poster[:body], status: poster[:status_code]
     end
 
     def create
