@@ -2,23 +2,23 @@ require 'rails_helper'
 require 'faker'
 
 describe "Posters API" do
-    # before(:all) do
-    #     Poster.destroy_all
-    #     @saved_ids = []
-    #     10.times do
-    #         poster = Poster.create(
-    #             name: Faker::Company.buzzword,
-    #             description: Faker::Company.bs,
-    #             price: Faker::Number.decimal(l_digits: 2),
-    #             year: Faker::Number.within(range: 1500..2020),
-    #             vintage: Faker::Boolean.boolean(true_ratio: 0.2),
-    #             img_url: "https://loremflickr.com/300/300"
-    #         )
-    #         @saved_ids.push(poster.id)
-    #     end
-    # end
+    before(:all) do
+        Poster.destroy_all
+        @saved_ids = []
+        10.times do
+            poster = Poster.create(
+                name: Faker::Company.buzzword,
+                description: Faker::Company.bs,
+                price: Faker::Number.decimal(l_digits: 2),
+                year: Faker::Number.within(range: 1500..2020),
+                vintage: Faker::Boolean.boolean(true_ratio: 0.2),
+                img_url: "https://loremflickr.com/300/300"
+            )
+            @saved_ids.push(poster.id)
+        end
+    end
 
-    xit "sends a list of posters" do        
+    it "sends a list of posters" do        
         get '/api/v1/posters'
 
         expect(response).to be_successful
@@ -54,7 +54,7 @@ describe "Posters API" do
         end
     end
 
-    xit "can get one poster by its id" do
+    it "can get one poster by its id" do
         id = Poster.create(name: "REGRET",
             description: "Hard work rarely pays off.",
             price: 89.00,
@@ -90,7 +90,7 @@ describe "Posters API" do
         expect(poster[:data][:attributes][:img_url]).to be_a(String)
     end    
 
-    xit "can destroy an poster" do
+    it "can destroy an poster" do
         poster = Poster.create(name: "REGRET",
             description: "Hard work rarely pays off.",
             price: 89.00,
@@ -107,7 +107,7 @@ describe "Posters API" do
         expect{Poster.find(poster.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    xit 'can create a poster' do
+    it 'can create a poster' do
         poster_params = {name: "JOY",
                 description: "To the World, my program works!",
                 price: 42.00,
@@ -131,7 +131,7 @@ describe "Posters API" do
         expect(poster.img_url).to eq("https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk")
     end
 
-    xit "can update an existing Poster" do
+    it "can update an existing Poster" do
         id = Poster.create({name: "JOY",
             description: "To the World, my program works!",
             price: 42.00,
@@ -151,7 +151,7 @@ describe "Posters API" do
         expect(poster.price).to eq(80.25)
     end
 
-    xit "can return posters in ascending order" do
+    it "can return posters in ascending order" do
         get "/api/v1/posters?sort=asc"
         poster = JSON.parse(response.body, symbolize_names: true)
         sorted_ids = poster[:data].map { |poster| poster[:id].to_i}
@@ -161,7 +161,7 @@ describe "Posters API" do
         expect(sorted_ids).to eq(@saved_ids)
     end
 
-    xit "can return posters in descending order" do
+    it "can return posters in descending order" do
         get "/api/v1/posters?sort=desc"
         
         poster = JSON.parse(response.body, symbolize_names: true)
@@ -172,7 +172,7 @@ describe "Posters API" do
         expect(sorted_ids).to eq(desc_ids)
     end
 
-    xit "can filter Posters by name" do
+    it "can filter Posters by name" do
         get '/api/v1/posters?name=re'
 
         expect(response).to be_successful
@@ -186,7 +186,7 @@ describe "Posters API" do
         end
     end
 
-    xit "can filter Posters by max_price" do
+    it "can filter Posters by max_price" do
         get '/api/v1/posters?max_price=88.00'
 
         expect(response).to be_successful
@@ -200,7 +200,7 @@ describe "Posters API" do
         end
     end
 
-    xit "can filter Posters by min_price" do
+    it "can filter Posters by min_price" do
         get '/api/v1/posters?min_price=88.00'
 
         expect(response).to be_successful
