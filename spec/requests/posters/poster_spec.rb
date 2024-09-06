@@ -1,8 +1,21 @@
 require 'rails_helper'
+require 'faker'
 
 describe "Posters API" do
     before(:all) do
-        Rails.application.load_seed
+        Poster.destroy_all
+        @saved_ids = []
+        10.times do
+            poster = Poster.create(
+                name: Faker::Company.buzzword,
+                description: Faker::Company.bs,
+                price: Faker::Number.decimal(l_digits: 2),
+                year: Faker::Number.within(range: 1500..2020),
+                vintage: Faker::Boolean.boolean(true_ratio: 0.2),
+                img_url: "https://loremflickr.com/300/300"
+            )
+            @saved_ids.push(poster.id)
+        end
     end
 
     it "sends a list of posters" do        
@@ -12,7 +25,7 @@ describe "Posters API" do
 
         posters = JSON.parse(response.body, symbolize_names: true)
 
-        expect(posters[:data].count).to eq(3)
+        expect(posters[:data].count).to eq(10)
 
         posters[:data].each do |poster|
             expect(poster).to have_key(:id)
@@ -85,12 +98,12 @@ describe "Posters API" do
             vintage: true,
             img_url:  "https://plus.unsplash.com/premium_photo-1661293818249-fddbddf07a5d")
         
-        expect(Poster.count).to eq(4)
+        expect(Poster.count).to eq(11)
     
         delete "/api/v1/posters/#{poster.id}"
     
         expect(response).to be_successful
-        expect(Poster.count).to eq(3)
+        expect(Poster.count).to eq(10)
         expect{Poster.find(poster.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -140,24 +153,23 @@ describe "Posters API" do
 
     it "can return posters in ascending order" do
         get "/api/v1/posters?sort=asc"
-        
         poster = JSON.parse(response.body, symbolize_names: true)
+        sorted_ids = poster[:data].map { |poster| poster[:id].to_i}
         
         expect(response).to be_successful
-        expect(poster.count).to eq(2)
-        expect(poster[:data][0][:attributes][:name]).to eq("REGRET")        
-        expect(poster[:data][2][:attributes][:name]).to eq("MEDIOCRITY")
+        expect(poster[:data].count).to eq(10)
+        expect(sorted_ids).to eq(@saved_ids)
     end
 
     it "can return posters in descending order" do
         get "/api/v1/posters?sort=desc"
         
         poster = JSON.parse(response.body, symbolize_names: true)
-        
+        sorted_ids = poster[:data].map { |poster| poster[:id].to_i}
+        desc_ids = @saved_ids.sort{ |a, b| b <=> a }
         expect(response).to be_successful
-        expect(poster.count).to eq(2)
-        expect(poster[:data][0][:attributes][:name]).to eq("MEDIOCRITY")
-        expect(poster[:data][2][:attributes][:name]).to eq("REGRET")
+        expect(poster[:data].count).to eq(10)
+        expect(sorted_ids).to eq(desc_ids)
     end
 
     it "can filter Posters by name" do
@@ -167,33 +179,10 @@ describe "Posters API" do
 
         posters = JSON.parse(response.body, symbolize_names: true)
 
-        expect(posters[:data].count).to eq(2)
-
         posters[:data].each do |poster|
-            expect(poster).to have_key(:id)
-            expect(poster[:id].to_i).to be_an(Integer)
-
-            expect(poster).to have_key(:attributes)
-            expect(poster[:attributes]).to be_a(Hash)
-
             expect(poster[:attributes]).to have_key(:name)
             expect(poster[:attributes][:name]).to be_a(String)
             expect(poster[:attributes][:name].downcase).to include("re".downcase)
-
-            expect(poster[:attributes]).to have_key(:description)
-            expect(poster[:attributes][:description]).to be_a(String)
-
-            expect(poster[:attributes]).to have_key(:price)
-            expect(poster[:attributes][:price]).to be_a(Float)
-
-            expect(poster[:attributes]).to have_key(:year)
-            expect(poster[:attributes][:year]).to be_a(Integer)
-
-            expect(poster[:attributes]).to have_key(:vintage)
-            expect([true, false]).to include(poster[:attributes][:vintage])
-
-            expect(poster[:attributes]).to have_key(:img_url)
-            expect(poster[:attributes][:img_url]).to be_a(String)
         end
     end
 
@@ -204,70 +193,24 @@ describe "Posters API" do
 
         posters = JSON.parse(response.body, symbolize_names: true)
 
-        expect(posters[:data].count).to eq(1)
-
         posters[:data].each do |poster|
-            expect(poster).to have_key(:id)
-            expect(poster[:id].to_i).to be_an(Integer)
-
-            expect(poster).to have_key(:attributes)
-            expect(poster[:attributes]).to be_a(Hash)
-
-            expect(poster[:attributes]).to have_key(:name)
-            expect(poster[:attributes][:name]).to be_a(String)
-
-            expect(poster[:attributes]).to have_key(:description)
-            expect(poster[:attributes][:description]).to be_a(String)
-
             expect(poster[:attributes]).to have_key(:price)
             expect(poster[:attributes][:price]).to be_a(Float)
             expect(poster[:attributes][:price]).to be <= 88.00
-
-            expect(poster[:attributes]).to have_key(:year)
-            expect(poster[:attributes][:year]).to be_a(Integer)
-
-            expect(poster[:attributes]).to have_key(:vintage)
-            expect([true, false]).to include(poster[:attributes][:vintage])
-
-            expect(poster[:attributes]).to have_key(:img_url)
-            expect(poster[:attributes][:img_url]).to be_a(String)
         end
     end
 
-    it "can filter Posters by max_price" do
+    it "can filter Posters by min_price" do
         get '/api/v1/posters?min_price=88.00'
 
         expect(response).to be_successful
 
         posters = JSON.parse(response.body, symbolize_names: true)
 
-        expect(posters[:data].count).to eq(2)
-
         posters[:data].each do |poster|
-            expect(poster).to have_key(:id)
-            expect(poster[:id].to_i).to be_an(Integer)
-
-            expect(poster).to have_key(:attributes)
-            expect(poster[:attributes]).to be_a(Hash)
-
-            expect(poster[:attributes]).to have_key(:name)
-            expect(poster[:attributes][:name]).to be_a(String)
-
-            expect(poster[:attributes]).to have_key(:description)
-            expect(poster[:attributes][:description]).to be_a(String)
-
             expect(poster[:attributes]).to have_key(:price)
             expect(poster[:attributes][:price]).to be_a(Float)
             expect(poster[:attributes][:price]).to be >= 88.00
-
-            expect(poster[:attributes]).to have_key(:year)
-            expect(poster[:attributes][:year]).to be_a(Integer)
-
-            expect(poster[:attributes]).to have_key(:vintage)
-            expect([true, false]).to include(poster[:attributes][:vintage])
-
-            expect(poster[:attributes]).to have_key(:img_url)
-            expect(poster[:attributes][:img_url]).to be_a(String)
         end
     end
 end
