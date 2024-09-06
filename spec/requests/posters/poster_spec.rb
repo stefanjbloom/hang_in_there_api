@@ -232,6 +232,31 @@ describe "Posters API" do
 
             expect(response_body).to eq(expected)
         end
+
+        it "will return a status code and message when required data is missing" do
+            poster_params = {name: "FAILURE",
+            price: 42.00,
+            year: 2019,
+            vintage: true,
+            }
+    
+            headers = { "CONTENT_TYPE" => "application/json" }
+
+            expected = {
+                errors: [
+                {
+                status: "422",
+                message: "Description is required"
+                message: "Img_url is required"
+                }
+            ]} 
+            
+            post '/api/v1/posters', headers: headers, params: JSON.generate(poster: poster_params)
+
+            response_body = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response_body).to eq(expected)
+        end
     end
 end
 
