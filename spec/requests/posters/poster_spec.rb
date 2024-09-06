@@ -214,3 +214,17 @@ describe "Posters API" do
         end
     end
 end
+
+RSpec.describe Poster, type: :model do
+    describe "validation" do
+        it { should validate_presence_of(:name).with_message("is required")}
+        it { should validate_presence_of(:description).with_message("is required")}
+        it { should validate_presence_of(:img_url).with_message("is required")}
+        it { should validate_presence_of(:price).with_message("is required")}
+        it { should validate_presence_of(:year).with_message("is required")}
+        it { should validate_numericality_of(:price).with_message("should be a valid price")}
+        it { should validate_numericality_of(:year).with_message("should be a valid year")}
+        it { should validate_inclusion_of(:vintage).in_array([true, false]).with_message("should be true or false")}
+        it {should validate_uniqueness_of(:name).with_message("needs to be unique")}
+    end
+end
