@@ -33,4 +33,27 @@ class Poster < ApplicationRecord
         end
         return poster_hash
     end
+
+    def self.error_handle(params)
+        poster_hash = {}
+        poster_var = Poster.new(params)
+        if poster_var.valid?
+            poster_var.save
+            poster_var = PosterSerializer.new(poster_var)
+            poster_hash[:status_code] = 201
+            poster_hash[:body] = poster_var
+        else
+            data_insert = poster_var.errors.full_messages()  
+            poster_var = {
+                "errors": [
+                {
+                "status": "422",
+                "message": data_insert
+                }
+            ]} 
+            poster_hash[:status_code] = 422
+            poster_hash[:body] = poster_var
+        end
+        return poster_hash
+    end
 end

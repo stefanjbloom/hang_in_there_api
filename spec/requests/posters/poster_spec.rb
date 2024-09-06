@@ -246,11 +246,10 @@ describe "Posters API" do
                 errors: [
                 {
                 status: "422",
-                message: "Description is required"
-                message: "Img_url is required"
+                message: ["Description is required", "Img url is required"]
                 }
             ]} 
-            
+
             post '/api/v1/posters', headers: headers, params: JSON.generate(poster: poster_params)
 
             response_body = JSON.parse(response.body, symbolize_names: true)
