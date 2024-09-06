@@ -213,6 +213,26 @@ describe "Posters API" do
             expect(poster[:attributes][:price]).to be >= 88.00
         end
     end
+
+    describe "errors" do
+
+        it "will return a status code and message when incorrect id queried" do
+
+            get '/api/v1/posters/74'
+            
+            expected = {
+                errors: [
+                {
+                status: "404",
+                message: "Record not found"
+                }
+            ]} 
+
+            response_body = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response_body).to eq(expected)
+        end
+    end
 end
 
 RSpec.describe Poster, type: :model do
@@ -228,10 +248,4 @@ RSpec.describe Poster, type: :model do
         it {should validate_uniqueness_of(:name).with_message("needs to be unique")}
     end
 
-    describe "errors" do
-        it "will return a status code and message when incorrect id queried" do
-            get "/api/v1/posters/74"
-            
-        end
-    end
 end

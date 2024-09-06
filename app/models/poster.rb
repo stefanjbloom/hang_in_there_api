@@ -20,7 +20,7 @@ class Poster < ApplicationRecord
             poster_var = Poster.find(id)
             poster_var = PosterSerializer.new(poster_var)
             poster_hash[:body] = poster_var
-        rescue ActiveRecord::RecordNotFound => each
+        rescue ActiveRecord::RecordNotFound
             poster_var = {
                 "errors": [
                 {
