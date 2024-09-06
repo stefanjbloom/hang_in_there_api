@@ -213,31 +213,18 @@ describe "Posters API" do
             expect(poster[:attributes][:price]).to be >= 88.00
         end
     end
+end
 
-    describe "validating data on create" do
-        it "requires name, description, price, year, vintage, img_url" do
-            
-            poster_name = Faker::Company.buzzword
-            poster_description = Faker::Company.bs
-            poster_price = Faker::Number.decimal(l_digits: 2)
-            poster_year = Faker::Number.within(range: 1500..2020)
-            poster_vintage = Faker::Boolean.boolean(true_ratio: 0.9)
-            poster_img_url =  "https://loremflickr.com/300/300"
-            poster_params = {name: poster_name,
-                    description: poster_description,
-                    price: poster_price,
-                    year: poster_year,
-                    vintage: poster_vintage,
-                    img_url: poster_img_url
-                    }
-            
-            no_error = Poster.create!(poster_params)
-            expect(no_error).to be_a Poster
-            
-            poster_params[:name] = 32
-            name_error = Poster.create(poster_params)
-            require 'pry';binding.pry
-            expect
-        end
+RSpec.describe Poster, type: :model do
+    describe "validation" do
+        it { should validate_presence_of(:name).with_message("is required")}
+        it { should validate_presence_of(:description).with_message("is required")}
+        it { should validate_presence_of(:img_url).with_message("is required")}
+        it { should validate_presence_of(:price).with_message("is required")}
+        it { should validate_presence_of(:year).with_message("is required")}
+        it { should validate_numericality_of(:price).with_message("should be a valid price")}
+        it { should validate_numericality_of(:year).with_message("should be a valid year")}
+        it { should validate_inclusion_of(:vintage).in_array([true, false]).with_message("should be true or false")}
+        it {should validate_uniqueness_of(:name).with_message("needs to be unique")}
     end
 end
