@@ -17,13 +17,13 @@ class Api::V1::PostersController < ApplicationController
     end
 
     def create
-        poster = Poster.create(poster_params)
-        render json: PosterSerializer.new(poster), status: 201
+        poster = Poster.error_handle(poster_params)
+        render json: poster[:body], status: poster[:status_code]
     end
 
     def update
-        poster = Poster.update(params[:id], poster_params)
-        render json: PosterSerializer.new(poster)
+        poster = Poster.error_handle(poster_params, params[:id])
+        render json: poster[:body], status: poster[:status_code]
     end
 
     def destroy

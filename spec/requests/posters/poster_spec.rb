@@ -6,12 +6,12 @@ describe "Posters API" do
         Poster.destroy_all
         @saved_ids = []
         10.times do
-            poster = Poster.create(
+            poster = Poster.create!(
                 name: Faker::Company.buzzword,
                 description: Faker::Company.bs,
                 price: Faker::Number.decimal(l_digits: 2),
                 year: Faker::Number.within(range: 1500..2020),
-                vintage: Faker::Boolean.boolean(true_ratio: 0.2),
+                vintage: Faker::Boolean.boolean(true_ratio: 0.4),
                 img_url: "https://loremflickr.com/300/300"
             )
             @saved_ids.push(poster.id)
@@ -227,6 +227,55 @@ describe "Posters API" do
                 message: "Record not found"
                 }
             ]} 
+
+            response_body = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response_body).to eq(expected)
+        end
+
+        it "will return a status code and message when required data is missing" do
+            poster_params = {name: "FAILURE",
+            price: 42.00,
+            year: 2019,
+            vintage: true,
+            }
+    
+            headers = { "CONTENT_TYPE" => "application/json" }
+
+            expected = {
+                errors: [
+                {
+                status: "422",
+                message: ["Description is required", "Img url is required", "Description cannot be blank", "Img url cannot be blank"]
+                }
+            ]} 
+
+            post '/api/v1/posters', headers: headers, params: JSON.generate(poster: poster_params)
+
+            response_body = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response_body).to eq(expected)
+        end
+
+        it "will return a status code and message when update is empty" do
+            id = Poster.create({name: "JOY",
+            description: "To the World, my program works!",
+            price: 42.00,
+            year: 2019,
+            vintage: false,
+            img_url: "https://unsplash.com/photos/brown-brick-building-with-red-car-parked-on-the-side-mMV6Y0ExyIk"}).id
+            previous_price = Poster.last.name
+            poster_params = { name: "" }
+            headers = {"CONTENT_TYPE" => "application/json"}
+            expected = {
+                errors: [
+                {
+                status: "422",
+                message: ["Name is required", "Name cannot be blank"]
+                }
+            ]} 
+
+            patch "/api/v1/posters/#{id}", headers: headers, params: JSON.generate({poster: poster_params})
 
             response_body = JSON.parse(response.body, symbolize_names: true)
 
